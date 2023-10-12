@@ -1,10 +1,54 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+// import { RouterLink, RouterView } from 'vue-router'
+// import HelloWorld from './components/HelloWorld.vue'
+import { ref } from 'vue'
+
+  const fetchedData = [
+    {
+      name: "jhon dot",
+      daysStatus: ['', '', null, null],
+      workDays: 12,
+      workHours: 80
+    }, 
+    {
+
+    },
+  ]
 </script>
 
 <template>
-  <header>
+  <div class="wrap">
+    <div>Timesheet</div>
+    <hr>
+    <!-- <button @click="increment">
+      {{ count }}
+    </button> -->
+    <table>
+      <thead>
+        <tr>
+          <th>employee name</th> 
+          <th>...</th> <!-- days of current month -->
+          <th>total work days</th> 
+          <th>total work hours</th> 
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>jso doe</td>
+          <td>[...]</td> <!-- array of statuses -->
+          <td>12</td> <!-- number of days with work status -->
+          <td>12</td> <!-- sum of work hours -->
+        </tr>
+        <tr>
+          <td>Centro comercial Moctezuma</td>
+          <td>Francisco Chang</td>
+          <td>Mexico</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- <header>
     <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
 
     <div class="wrapper">
@@ -17,10 +61,28 @@ import HelloWorld from './components/HelloWorld.vue'
     </div>
   </header>
 
-  <RouterView />
+  <RouterView /> -->
 </template>
 
 <style scoped>
+  * {
+    margin: 0;
+    padding: 0;
+    font-family: sans-serif;
+    text-decoration: none;
+  }
+
+  .wrap {
+    padding: 200px;
+  }
+
+  table, th, td {
+  border: 1px solid black;
+}
+
+</style>
+
+<!-- <style scoped>
 header {
   line-height: 1.5;
   max-height: 100vh;
@@ -82,4 +144,4 @@ nav a:first-of-type {
     margin-top: 1rem;
   }
 }
-</style>
+</style> -->
