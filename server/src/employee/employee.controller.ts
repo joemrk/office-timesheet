@@ -1,6 +1,6 @@
 import { Controller } from '@nestjs/common';
 import { EmployeeService } from './employee.service';
-import { Crud, CrudController } from '@nestjsx/crud';
+import { Crud, CrudController, Override } from '@nestjsx/crud';
 import { Employee } from './employee.entity';
 
 @Crud({
@@ -15,5 +15,10 @@ export class EmployeeController implements CrudController<Employee> {
 
   get base(): CrudController<Employee> {
     return this;
+  }
+
+  @Override('getManyBase')
+  async getMany() {
+    return this.service.findAll();
   }
 }

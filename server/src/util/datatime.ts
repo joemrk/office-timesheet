@@ -1,3 +1,9 @@
 import * as dayjs from 'dayjs';
 
-export const getStartOfDay = () => dayjs().startOf('day').toDate().getTime();
+const getStartOf = (v) => dayjs().startOf(v).toDate().getTime();
+
+export const getStartOfDay = () => getStartOf('day');
+
+export const getStartOfMonth = () => getStartOf('month');
+
+export const getDaysOfCurrentMonth = () => dayjs().daysInMonth();
