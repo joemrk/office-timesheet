@@ -30,9 +30,9 @@ export class Timesheet extends BaseEntity {
   })
   status: TimesheetStatus;
 
-  @Column('timestamp')
+  @Column('timestamp', { nullable: true })
   startWorkTime: Date;
 
-  @Column('timestamp')
+  @Column('timestamp', { nullable: true })
   endWorkTime: Date;
 }

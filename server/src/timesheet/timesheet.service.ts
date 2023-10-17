@@ -33,7 +33,7 @@ export class TimesheetService extends TypeOrmCrudService<Timesheet> {
   }
 
   async onModuleInit() {
-    // await this.generateDaysTimesheet();
+    await this.generateDaysTimesheet();
   }
 
   async generateDaysTimesheet() {
@@ -48,6 +48,10 @@ export class TimesheetService extends TypeOrmCrudService<Timesheet> {
     const timesheet = new Timesheet();
     timesheet.employeeId = employee.id;
     timesheet.status = this.getStatusByEvents(employee.events);
+
+    if (!employee.events) {
+      return timesheet;
+    }
 
     const firstEventTime = employee.events[0].Issued;
     const lastEventTime = employee.events[employee.events.length - 1].Issued;
