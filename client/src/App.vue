@@ -3,6 +3,10 @@ import { onMounted, ref } from 'vue'
 import { arrayRange } from './utils/generate-array';
 import { getDaysInCurrentMonth } from './utils/dates';
 
+  const allStatuses = new Set(['present', 'lateness', 'overtime', 'missing', 'hospital', 'vacation', 'remote']);
+  const workStatuses = new Set(['present', 'lateness', 'overtime', 'remote'])
+
+
   const responseData = ref([]);
 
   const daysOfCurrentMonth = getDaysInCurrentMonth()
@@ -27,6 +31,10 @@ import { getDaysInCurrentMonth } from './utils/dates';
 
       return e;
     })
+  }
+
+  function isEmploeeWork(status: string): boolean {
+    return Boolean(status) && workStatuses.has(status)
   }
 
   onMounted(() => {
@@ -67,17 +75,17 @@ import { getDaysInCurrentMonth } from './utils/dates';
       <thead>
         <tr>
           <th>name</th> 
-          <th v-for="day in monthDays"> 
+          <th v-for="day in monthDays" :key="day"> 
             {{ day }}
           </th>
           <th>total work days</th> 
         </tr>
       </thead>
       <tbody>
-        <tr v-for="e of responseData">
+        <tr v-for="e of responseData" :key="e.id">
           <td>{{`${e.firstName} ${e.lastName}`}}</td>
-          <td v-for="s of e.timesheet" :class="['mark-' + s]"></td>
-          <td>{{e.timesheet.filter((d) => Boolean(d)).length}}</td>
+          <td v-for="s of e.timesheet" :class="['mark-' + s]" :key="s"></td>
+          <td>{{e.timesheet.filter((d) => isEmploeeWork(d)).length}}</td>
         </tr>
       </tbody>
     </table>
