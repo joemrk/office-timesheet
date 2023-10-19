@@ -1,5 +1,11 @@
 <template>
-  <table v-if="employees">
+  <div class="paper">
+    <span>{{ currentMonth }}</span>
+    <hr>
+
+    <status-description />
+
+    <table v-if="employees">
       <thead>
         <tr>
           <th>Name</th> 
@@ -16,6 +22,7 @@
     <div v-else>
       Loading...
     </div>
+  </div>
 </template>
 
 <script>
@@ -25,6 +32,7 @@ import { getDaysInCurrentMonth } from '../utils/dates'
 
 const daysOfCurrentMonth = getDaysInCurrentMonth()
 const monthDays = arrayRange(1, daysOfCurrentMonth, 1);
+const currentMonth = new Date().toLocaleString('en-us', { month:'long' });
 
 export default defineComponent({
   props: {
@@ -38,7 +46,8 @@ export default defineComponent({
 
     return {
       monthDays,
-      employees
+      employees,
+      currentMonth
     };
   },
 })

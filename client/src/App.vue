@@ -14,6 +14,7 @@ import { transformFetchedEmployee } from './utils/transformer';
       return;
     }
     
+    // @ts-ignore
     employees.value = rawEmployees.map(transformFetchedEmployee)
   }
 
@@ -24,16 +25,15 @@ import { transformFetchedEmployee } from './utils/transformer';
 
 <template>
   <div class="wrap">
-    <span>{{new Date().toLocaleString('en-us', { month:'long' })}}</span>
-    <hr>
-
-    <status-description />
-
     <timesheet-table :employees="computedEmployees"/>
+
+    <br>
+    <add-employee />
+    
   </div>
 </template>
 
-<style scoped>
+<style>
   * {
     margin: 0;
     padding: 0;
@@ -41,11 +41,20 @@ import { transformFetchedEmployee } from './utils/transformer';
     text-decoration: none;
   }
 
-  .wrap {
-    padding: 100px;
+  .paper {
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #c5c5c5;
+    box-shadow: 1px 1px 3px 1px #c5c5c5; 
   }
 
   hr {
     margin-bottom: 10px;
+  }
+
+  body {
+    background-color: #e8e8e8;
+    padding: 50px 100px;
+    margin: 0 auto;
   }
 </style>
