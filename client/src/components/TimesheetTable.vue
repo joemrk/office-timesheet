@@ -52,3 +52,13 @@ export default defineComponent({
   },
 })
 </script>
+
+<style scoped>
+  table {
+    border: 1px solid #666;
+  }
+
+  table tr {
+    box-shadow: 0px 1px 0px 0px #666666;
+  }
+</style>

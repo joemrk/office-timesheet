@@ -1,20 +1,20 @@
 <template>
   <tr>
     <td>{{`${employee.firstName} ${employee.lastName}`}}</td>
-    <timesheet-day v-for="[i, s] of employee.timesheet.entries()" :status="s"  :key="i"/>
+    <timesheet-day 
+      v-for="[i, t] of employee.timesheet.entries()" 
+      :timesheet="t" 
+      :day="i+1" 
+      :employee="employee.id" 
+      :key="i"
+    />
     <td>{{ workDays }}</td>
   </tr>
 </template>
 
 <script>
 import { defineComponent } from 'vue'
-
-const workStatuses = new Set(['PRESENT', 'LATENESS', 'OVERTIME', 'REMOTE'])
-
-const isEmploeeWork = (status) =>{
-  return Boolean(status) && workStatuses.has(status)
-}
-
+import { isEmployeeWork } from '../utils/is-employee-work'
 export default defineComponent({
   props: {
     employee: {
@@ -26,7 +26,7 @@ export default defineComponent({
   setup(props) {
     const { employee }  = props;
 
-    const workDays = Object.entries(employee.timesheet).filter(([, v]) => isEmploeeWork(v)).length
+    const workDays = Object.entries(employee.timesheet).filter(([, v]) => v && isEmployeeWork(v.status)).length
 
     return {
       employee, workDays
@@ -35,18 +35,7 @@ export default defineComponent({
 })
 </script>
 
-<style>
-  table, th, td {
-    border: 1px solid black;
-  }
+<style scoped>
 
-  th, td {
-    min-width: 20px;
-    min-height: 20px;
-  }
 
-  tr td.table-mark {
-    margin: 3px;
-    border-radius: 3px;
-  }
 </style>

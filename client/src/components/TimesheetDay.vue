@@ -1,28 +1,57 @@
 <template>
-  <td :class="['mark-' + status]"></td>
+  <td>
+    <button
+      :class="['mark-' + status]" 
+      @click="selectDay"
+    ></button>
+   </td>
 </template>
 
 <script>
 import {defineComponent} from 'vue'
-
 export default defineComponent ({
   props: {
-    status: {
-      type: String,
+    timesheet: {
+      type: Object,
       required: false,
+    },
+    day: {
+      type: Number,
+      required: false
+    },
+    employee: {
+      type: Number,
+      required: false
     }
   },
   setup(props) {
-    const { status } = props;
-    
+    const { day, employee, timesheet } = props;
+    const selectDay = () => {
+      console.log({
+        day,
+        employee,
+        timesheet
+      });
+    }
+
     return {
-      status: status ? status.toLocaleLowerCase() : 'null'
+      selectDay,
+      status: timesheet?.status ? timesheet.status.toLocaleLowerCase() : 'null'
     }
   }
 })
 </script>
 
 <style>
+  td button {
+    cursor: pointer;
+    border: 1px solid black;
+    min-height: 20px;
+    min-width: 20px;
+    margin: 2px;
+    border-radius: 3px;
+  }
+
 .mark-null {
     background-color: #efefef;
   }

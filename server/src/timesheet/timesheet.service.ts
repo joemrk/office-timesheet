@@ -34,6 +34,18 @@ export class TimesheetService extends TypeOrmCrudService<Timesheet> {
 
   async onModuleInit() {
     await this.generateDaysTimesheet();
+
+    // use query to generate calendar days and fill events
+    //
+    //   WITH RECURSIVE DateRange AS (
+    //     SELECT DATE_FORMAT(NOW(), '%Y-%m-01') AS date
+    //     UNION ALL
+    //     SELECT DATE_ADD(date, INTERVAL 1 DAY)
+    //     FROM DateRange
+    //     WHERE DATE_ADD(date, INTERVAL 1 DAY) <= LAST_DAY(NOW())
+    // )
+    // SELECT date
+    // FROM DateRange;
   }
 
   async generateDaysTimesheet() {
