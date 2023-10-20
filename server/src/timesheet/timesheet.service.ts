@@ -145,8 +145,8 @@ export class TimesheetService extends TypeOrmCrudService<Timesheet> {
     );
 
     if (
-      events[0].Issued + this.configService.get<number>(LATENESS_TIME) <
-      startWorkTime
+      events[0].Issued >
+      this.configService.get<number>(LATENESS_TIME) + startWorkTime
     ) {
       return TimesheetStatus.LATENESS;
     }
@@ -156,9 +156,8 @@ export class TimesheetService extends TypeOrmCrudService<Timesheet> {
     );
 
     if (
-      events[events.length - 1].Issued +
-        this.configService.get<number>(OVERTIME_TIME) <
-      endWorkTime
+      events[events.length - 1].Issued >
+      this.configService.get<number>(OVERTIME_TIME) + endWorkTime
     ) {
       return TimesheetStatus.OVERTIME;
     }
