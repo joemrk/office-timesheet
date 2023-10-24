@@ -19,6 +19,7 @@ import {
 } from 'src/config/constants';
 import * as dayjs from 'dayjs';
 import * as duration from 'dayjs/plugin/duration';
+import { TimesheetSet } from './dto/timesheet-set.dto';
 dayjs.extend(duration);
 
 @Injectable()
@@ -175,5 +176,9 @@ export class TimesheetService extends TypeOrmCrudService<Timesheet> {
     }
 
     return TimesheetStatus.PRESENT;
+  }
+
+  async setTimesheetDay(dto: TimesheetSet) {
+    return this.repo.upsert(dto, ['id']);
   }
 }
