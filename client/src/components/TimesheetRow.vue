@@ -3,39 +3,26 @@
     <td>{{`${employee.firstName} ${employee.lastName}`}}</td>
     <timesheet-day 
       v-for="[i, t] of employee.timesheet.entries()" 
-      :timesheet="t" 
-      :day="i+1" 
-      :employee="employee.id" 
+      :timesheet="t"
+      :day="i+1"
+      :month="props.month"
+      :employeeId="employee.id"
       :key="i"
     />
     <td>{{ workDays }}</td>
   </tr>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
-import { isEmployeeWork } from '../utils/is-employee-work'
-export default defineComponent({
-  props: {
-    employee: {
-      type: Object,
-      require: true
-    }
-  },
+<script setup>
+import { computed, defineProps } from 'vue';
+import { isEmployeeWork } from '../utils/is-employee-work';
 
-  setup(props) {
-    const { employee }  = props;
+const props = defineProps(
+  ['employee', 'month']
+)
+const { employee } = props;
 
-    const workDays = Object.entries(employee.timesheet).filter(([, v]) => v && isEmployeeWork(v.status)).length
-
-    return {
-      employee, workDays
-    }
-  },
-})
+const workDays = computed(
+  () => Object.entries(employee.timesheet).filter(([, v]) => v && isEmployeeWork(v.status)).length
+)
 </script>
-
-<style scoped>
-
-
-</style>

@@ -1,35 +1,39 @@
 <script setup lang="ts">
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref } from 'vue'
 import { fetchEmployee } from './api'
 import { transformFetchedEmployee } from './utils/transformer';
 
-  const employees = ref([]);
-  const computedEmployees = computed(() => {
-    return employees;
-  });
+const employees = ref([]);
 
-  const fetchData = async  () => {
-    const rawEmployees = await fetchEmployee();
-    if(!rawEmployees || !rawEmployees.length) {
-      return;
-    }
-    
-    // @ts-ignore
-    employees.value = rawEmployees.map(transformFetchedEmployee)
+const fetchData = async  () => {
+  const rawEmployees = await fetchEmployee();
+  if(!rawEmployees || !rawEmployees.length) {
+    return;
   }
+  
+  // @ts-ignore
+  employees.value = rawEmployees.map(transformFetchedEmployee)
+}
 
-  onMounted(() => {
-    fetchData();
-  });
+onMounted(() => {
+  fetchData();
+});
 </script>
 
 <template>
   <div class="wrap">
-    <timesheet-table :employees="computedEmployees"/>
-
+    <timesheet-table :employees="employees"/>
+    <br>
+    <timesheet-set-form
+      :id="126"
+      :employeeId="1"
+      :status="'OVERTIME'"
+      :month="10"
+      :day="5"
+      :employeeName="'Employee Name'"
+    />
     <br>
     <add-employee />
-    
   </div>
 </template>
 
@@ -56,5 +60,23 @@ import { transformFetchedEmployee } from './utils/transformer';
     background-color: #e8e8e8;
     padding: 50px 100px;
     margin: 0 auto;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  form label {
+    margin-bottom: 10px;
+  }
+  form label span{
+    display: block;
+  }
+  form button {
+    max-width: 150px;
+  }
+
+  .response-error {
+    color: red;
   }
 </style>

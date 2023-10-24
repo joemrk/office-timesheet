@@ -74,23 +74,3 @@ const createEmployee = async () => {
   isFetching.value = false;
 }
 </script>
-
-<style scoped>
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-  form label {
-    margin-bottom: 10px;
-  }
-  form label span{
-    display: block;
-  }
-  form button {
-    max-width: 150px;
-  }
-
-  .response-error {
-    color: red;
-  }
-</style>

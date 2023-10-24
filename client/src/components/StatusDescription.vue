@@ -9,8 +9,8 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
-const allStatuses = new Set(['PRESENT', 'LATENESS', 'OVERTIME', 'MISSING', 'HOSPITAL', 'VACATION', 'REMOTE']);
+import { defineComponent } from 'vue';
+import { allStatuses } from '../constant';
 
 export default defineComponent({
   setup() {

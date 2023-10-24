@@ -5,7 +5,7 @@
 
     <status-description />
 
-    <table v-if="employees">
+    <table v-if="props.employees">
       <thead>
         <tr>
           <th>Name</th> 
@@ -16,7 +16,12 @@
         </tr>
       </thead>
       <tbody>
-        <timesheet-row v-for="e of employees" :employee="e" :key="e.id"/>
+        <timesheet-row 
+          v-for="e of props.employees" 
+          :employee="e" 
+          :key="e.id"
+          :month="selectedMonth"
+          />
       </tbody>
     </table>
     <div v-else>
@@ -25,32 +30,29 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+import { computed, defineProps } from 'vue'
 import { arrayRange } from '../utils/generate-array';
 import { getDaysInCurrentMonth } from '../utils/dates'
 
 const daysOfCurrentMonth = getDaysInCurrentMonth()
-const monthDays = arrayRange(1, daysOfCurrentMonth, 1);
-const currentMonth = new Date().toLocaleString('en-us', { month:'long' });
 
-export default defineComponent({
-  props: {
-    employees: {
-      type: Object,
-      required: true
-    }
-  },
-  setup(props) {
-    const { employees } = props;
+// TODO: dynamically change on data is fetching
+const selectedMonth = computed(() => new Date().getMonth());
 
-    return {
-      monthDays,
-      employees,
-      currentMonth
-    };
-  },
-})
+const props = defineProps(
+  ['employees']
+);
+
+const monthDays = computed(
+  () => arrayRange(1, daysOfCurrentMonth, 1)
+);
+
+const currentMonth = computed(
+  () => new Date(new Date().setMonth(selectedMonth.value)).toLocaleString('en-us', { month:'long' })
+);
+
+
 </script>
 
 <style scoped>

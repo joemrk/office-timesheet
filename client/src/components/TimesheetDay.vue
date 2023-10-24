@@ -1,45 +1,54 @@
 <template>
   <td>
     <button
-      :class="['mark-' + status]" 
+      :class="['mark-' + status, {'is-selected': isSelected}]" 
       @click="selectDay"
     ></button>
    </td>
 </template>
 
-<script>
-import {defineComponent} from 'vue'
-export default defineComponent ({
-  props: {
-    timesheet: {
-      type: Object,
-      required: false,
-    },
-    day: {
-      type: Number,
-      required: false
-    },
-    employee: {
-      type: Number,
-      required: false
-    }
-  },
-  setup(props) {
-    const { day, employee, timesheet } = props;
-    const selectDay = () => {
-      console.log({
-        day,
-        employee,
-        timesheet
-      });
-    }
+<script setup>
+import { ref, computed, defineProps, onMounted, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 
-    return {
-      selectDay,
-      status: timesheet?.status ? timesheet.status.toLocaleLowerCase() : 'null'
-    }
-  }
+const route = useRoute()
+const router = useRouter()
+
+const props = defineProps(
+  ['timesheet', 'employeeId', 'day', 'month']
+);
+
+const status = computed(
+  () => props.timesheet?.status ? props.timesheet.status.toLocaleLowerCase() : 'null'
+);
+
+const isSelected = ref(false)
+
+onMounted(() => {
+  checkDaySelection(route.query)
 })
+
+watch(() => route.query, () => {
+  checkDaySelection(route.query)
+})
+
+const checkDaySelection = (query) => {
+  const [month, day, employeeId] = query.selected ? query.selected.split(',') : [null, null, null]
+
+  isSelected.value =  
+    props.day == Number(day) 
+    && props.month == Number(month) 
+    && props.employeeId == Number(employeeId)
+}
+
+const selectDay = () => {
+  router.push({
+    ...route,
+    query: {
+      selected: `${props.month},${props.day},${props.employeeId},${props?.timesheet?.status ?? ''}`
+    }
+  })
+}
 </script>
 
 <style>
@@ -82,5 +91,9 @@ export default defineComponent ({
 
   .mark-remote {
     background-color: rgb(238, 205, 205);
+  }
+
+  .is-selected {
+    box-shadow: 0px 0px 2px 2px rgb(6, 122, 255);
   }
 </style>

@@ -27,6 +27,20 @@ export const addEmployee = async (body: any) => {
   }
 }
 
-// get info by employee
-
 // update day
+export const setTimesheet = async (body: any) => {
+  try {
+    const response = await fetch(
+      `${API_URL}/timesheet`, 
+      { 
+        method: 'post', 
+        body: JSON.stringify(body),
+        headers,
+      })      
+    return response.json();
+  } catch (error: any) {
+    console.log('fetch error', error);
+  }
+}
+
+// get info by employee
