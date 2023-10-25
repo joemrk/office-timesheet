@@ -20,6 +20,7 @@ import {
 import * as dayjs from 'dayjs';
 import * as duration from 'dayjs/plugin/duration';
 import { TimesheetSet } from './dto/timesheet-set.dto';
+import { Cron, CronExpression } from '@nestjs/schedule';
 dayjs.extend(duration);
 
 @Injectable()
@@ -34,8 +35,7 @@ export class TimesheetService extends TypeOrmCrudService<Timesheet> {
   }
 
   async onModuleInit() {
-    await this.generateDaysTimesheet();
-
+    // await this.generateDaysTimesheet();
     // use query to generate calendar days and fill events
     //
     //   WITH RECURSIVE DateRange AS (
@@ -47,6 +47,11 @@ export class TimesheetService extends TypeOrmCrudService<Timesheet> {
     // )
     // SELECT date
     // FROM DateRange;
+  }
+
+  @Cron(CronExpression.EVERY_DAY_AT_10PM)
+  async generateDaysReport() {
+    await this.generateDaysTimesheet();
   }
 
   async generateDaysTimesheet() {

@@ -6,6 +6,7 @@ import { Timesheet } from './timesheet.entity';
 import { EmployeeModule } from 'src/employee/employee.module';
 import { UProxApiModule } from '@app/u-prox-api';
 import { ConfigModule } from '@nestjs/config';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { ConfigModule } from '@nestjs/config';
     EmployeeModule,
     UProxApiModule,
     ConfigModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [TimesheetController],
   providers: [TimesheetService],
