@@ -2,11 +2,11 @@
   <tr>
     <td>{{`${employee.firstName} ${employee.lastName}`}}</td>
     <timesheet-day 
-      v-for="[i, t] of employee.timesheet.entries()" 
+      v-for="(t, i) of employee.timesheet" 
       :timesheet="t"
       :day="i+1"
-      :month="props.month"
-      :employeeId="employee.id"
+      :month="month"
+      :employee="employee"
       :key="i"
     />
     <td>{{ workDays }}</td>

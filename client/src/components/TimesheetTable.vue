@@ -4,26 +4,29 @@
     <hr>
 
     <status-description />
+    <div v-if="employees" class="timesheet-table">
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th> 
+            <th v-for="day in monthDays" :key="day"> 
+              {{ day }}
+            </th>
+            <th>Total days</th> 
+          </tr>
+        </thead>
+        <tbody>
+          <timesheet-row 
+            v-for="e of employees" 
+            :employee="e" 
+            :month="selectedMonth"
+            :key="e.id"
+            />
+        </tbody>
+      </table>
 
-    <table v-if="props.employees">
-      <thead>
-        <tr>
-          <th>Name</th> 
-          <th v-for="day in monthDays" :key="day"> 
-            {{ day }}
-          </th>
-          <th>Total days</th> 
-        </tr>
-      </thead>
-      <tbody>
-        <timesheet-row 
-          v-for="e of props.employees" 
-          :employee="e" 
-          :key="e.id"
-          :month="selectedMonth"
-          />
-      </tbody>
-    </table>
+      <timesheet-set-form />
+    </div>
     <div v-else>
       Loading...
     </div>
@@ -52,15 +55,19 @@ const currentMonth = computed(
   () => new Date(new Date().setMonth(selectedMonth.value)).toLocaleString('en-us', { month:'long' })
 );
 
-
 </script>
 
 <style scoped>
   table {
     border: 1px solid #666;
+    margin-right: 15px;
   }
 
   table tr {
     box-shadow: 0px 1px 0px 0px #666666;
+  }
+
+  .timesheet-table {
+    display: flex;
   }
 </style>

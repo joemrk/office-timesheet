@@ -10,12 +10,12 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { allStatuses } from '../constant';
+import { ALL_STATUSES } from '../constant';
 
 export default defineComponent({
   setup() {
     return {
-      statuses: [...allStatuses].map(s => s.toLocaleLowerCase())
+      statuses: [...ALL_STATUSES].map(s => s.toLocaleLowerCase())
     }
   },
 })

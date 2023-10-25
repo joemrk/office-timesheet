@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
-import { createRouter, createWebHashHistory } from 'vue-router'
-import App from './App.vue'
+import { createRouter, createWebHashHistory } from 'vue-router';
+import App from './App.vue';
 
 import TimeSheetDay from './components/TimesheetDay.vue'
 import TimeSheetRow from './components/TimesheetRow.vue'

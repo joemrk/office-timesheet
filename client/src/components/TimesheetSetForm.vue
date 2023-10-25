@@ -1,89 +1,96 @@
 <template>
-  <div class="paper">
-    <form
+    <form v-if="form ?? selectedEmployee"
       @submit.prevent="saveTimesheet"
     >
       <div class="selected-details">
-        {{ props.employeeName }}
+        {{ selectedEmployee.firstName + " " + selectedEmployee.lastName }}
         <br>
-        {{ changedDay.toLocaleDateString() }}
+        {{ new Date(form.createdAt).toLocaleDateString() }}
       </div>
       <br>
-      <input v-if="id" type="hidden" v-model="form.id">
-
+      <hr>
       <label>
         <span>Status</span>
         <select v-model="form.status">
-          <option v-for="status in allStatuses" :key="status" :value="status">{{ status }}</option>
+          <option v-for="status in ALL_STATUSES" :key="status" :value="status">{{ status }}</option>
         </select>
       </label>
 
-      <div v-if="error.message.length" :class="{
-        'response-error': error.isError
+      <div v-if="res.message.length" :class="{
+        'response-error': res.isError
         }">
-          <p>{{ error.message }}</p>
+          <p>{{ res.message }}</p>
       </div>
 
       <br>
       <button :disabled="isFetching">Save</button>
     </form>
-  </div>
 </template>
 
 <script setup>
-import { ref, computed, defineProps, watch } from 'vue'
-import { allStatuses } from '../constant';
+import { ref, watch } from 'vue'
 import { getDateByMonthAndDay } from '../utils/dates';
 import { setTimesheet } from '../api';
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router';
+import { SELECTED_DAY_STORE_KEY, ALL_STATUSES } from '../constant';
 
-const route = useRoute()
+const router = useRouter();
 
-const props = defineProps([
-  'id', 'status', 'employeeId', 'month', 'day', 'employeeName'
-])
-
-const form = ref({
-  id: props.id,
-  status: props.status,
-  employeeId: props.employeeId,
-  month: props.month,
-  day: props.day,
-  createdAt: null,
-});
-
+const route = useRoute();
+const selectedEmployee = ref();
+const form = ref(null);
 const isFetching = ref(false);
-const error = ref({
+const res = ref({
   isError: false,
   message: ''
 });
 
-const changedDay = computed(
-  () => getDateByMonthAndDay(props.month, props.day)
-);
 
 const saveTimesheet = async () => {
-  error.value = { isError: false, message: ''};
+  res.value = { isError: false, message: ''};
   isFetching.value = true;
-
-  form.value.createdAt = changedDay.value.toISOString();
 
   const response = await setTimesheet(form.value);
 
-  if(response.id) {
+  if(response.id || response.generatedMaps?.[0]?.id) {
     form.value = Object.fromEntries(
       Object.entries(form.value)
         .map(([k,])=> ([k, '']))
     );
-    error.value = {isError: false, message: 'OK'};
+    res.value = {isError: false, message: 'OK'};
+
+    router.go(0);
   } else {
-    error.value = {isError: true, message: response.message};
+    res.value = {isError: true, message: response.message};
   }
 
   isFetching.value = false;
 }
 
-watch(route.query, () => {
-  
-})
+watch(() => route.query, () => {
+  if(!route.query['selected']) {
+    return;
+  }
+
+  try {
+    const selectedDayStorageValue = localStorage.getItem(SELECTED_DAY_STORE_KEY);
+    if(!selectedDayStorageValue) {
+      return
+    }
+    const parsedValue = JSON.parse(selectedDayStorageValue);
+    const { timesheet, day, month, employee } = parsedValue;
+
+    form.value = {
+      id: timesheet?.id ?? null,
+      employeeId: employee?.id ?? null,
+      status: timesheet?.status ?? null,
+      createdAt: getDateByMonthAndDay(month, day).toISOString(),
+    }
+
+    selectedEmployee.value = employee;
+  } catch (error) {
+    console.log(error);
+    console.error(`Invalid storaged data for key:${SELECTED_DAY_STORE_KEY}`);
+  }
+});
 </script>

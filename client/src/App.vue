@@ -1,19 +1,22 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, provide } from 'vue'
 import { fetchEmployee } from './api'
 import { transformFetchedEmployee } from './utils/transformer';
+import { PROVIDE_FETCH_DATA } from './constant';
 
 const employees = ref([]);
 
-const fetchData = async  () => {
+const fetchData = async () => {
   const rawEmployees = await fetchEmployee();
-  if(!rawEmployees || !rawEmployees.length) {
+  if(!rawEmployees || !rawEmployees.length ) {
     return;
   }
   
   // @ts-ignore
   employees.value = rawEmployees.map(transformFetchedEmployee)
 }
+
+provide(PROVIDE_FETCH_DATA, fetchData)
 
 onMounted(() => {
   fetchData();
@@ -23,15 +26,6 @@ onMounted(() => {
 <template>
   <div class="wrap">
     <timesheet-table :employees="employees"/>
-    <br>
-    <timesheet-set-form
-      :id="126"
-      :employeeId="1"
-      :status="'OVERTIME'"
-      :month="10"
-      :day="5"
-      :employeeName="'Employee Name'"
-    />
     <br>
     <add-employee />
   </div>

@@ -10,19 +10,28 @@
 <script setup>
 import { ref, computed, defineProps, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { SELECTED_DAY_STORE_KEY } from '../constant'
 
 const route = useRoute()
 const router = useRouter()
-
 const props = defineProps(
-  ['timesheet', 'employeeId', 'day', 'month']
+  ['timesheet', 'employee', 'day', 'month']
 );
 
 const status = computed(
   () => props.timesheet?.status ? props.timesheet.status.toLocaleLowerCase() : 'null'
 );
 
-const isSelected = ref(false)
+const isSelected = ref(false);
+
+const checkDaySelection = (query) => {
+  const [month, day, employeeId] = query.selected ? query.selected.split(',') : [null, null, null]
+
+  isSelected.value = 
+    props.day === Number(day) 
+    && props.month === Number(month) 
+    && props.employee.id === Number(employeeId);
+}
 
 onMounted(() => {
   checkDaySelection(route.query)
@@ -32,20 +41,18 @@ watch(() => route.query, () => {
   checkDaySelection(route.query)
 })
 
-const checkDaySelection = (query) => {
-  const [month, day, employeeId] = query.selected ? query.selected.split(',') : [null, null, null]
-
-  isSelected.value =  
-    props.day == Number(day) 
-    && props.month == Number(month) 
-    && props.employeeId == Number(employeeId)
-}
-
 const selectDay = () => {
+  localStorage.setItem(SELECTED_DAY_STORE_KEY, JSON.stringify({
+    timesheet: props.timesheet ?? null,
+    month: props.month,
+    day: props.day,
+    employee: props.employee,
+  }))
+
   router.push({
     ...route,
     query: {
-      selected: `${props.month},${props.day},${props.employeeId},${props?.timesheet?.status ?? ''}`
+      selected: `${props.month},${props.day},${props.employee.id}`
     }
   })
 }
