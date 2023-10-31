@@ -97,4 +97,24 @@ export class UProxApiService implements OnModuleInit {
 
     return response;
   }
+
+  /**
+   * Open door
+   * @param cardId enterer's card id
+   * @param token door token
+   */
+  async doorAccessIn(cardId: string, token = 922) {
+    // Door: 922
+    const config: AxiosRequestConfig = {
+      url: '/DoorAccessIn',
+      method: 'post',
+      data: {
+        // CardCode: cardId,
+        Token: token,
+        UserSID: this.sessionId,
+      },
+    };
+
+    return this.request<EventListResponse>(config);
+  }
 }
